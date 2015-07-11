@@ -16,10 +16,10 @@ function User(connection) {
     this.connection.on("data", this.handleData);
     
     // initialize the users screen
-    this.ansi().clear();
+    this.ansi().clear().flush();
 }
 
-// generic abstractions
+// generic abstractions; mostly syntactic sugar anyway
 
 User.prototype.send = function(buffer) {
     this.connection.write(buffer);
