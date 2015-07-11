@@ -10,7 +10,9 @@
 var net = require("net");
 var User = require("./User");
 
+var PORT = 7070;
+
 // each connection represents a user
 // JavaScript voodoo abstracts this for us
 
-net.createServer(User);
+net.createServer(User.constructor).listen(PORT);
