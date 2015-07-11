@@ -4,6 +4,8 @@
  * which under the hood is just a connection
  */
 
+var ansi = require("./ansi");
+
 function User(connection) {
     this.connection = connection;
     
@@ -13,7 +15,21 @@ function User(connection) {
     // handle socket events
     this.connection.on("data", this.handleData);
     
+    // initialize the users screen
+    this.ansi().clear();
 }
+
+// generic abstractions
+
+User.prototype.send = function(buffer) {
+    this.connection.write(buffer);
+}
+
+User.prototype.ansi = function() {
+    return ansi(this);
+}
+
+// socket event handlers
 
 User.prototype.handleData = function(data) {
     console.log(data); // for debug
