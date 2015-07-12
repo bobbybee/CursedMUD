@@ -17,6 +17,8 @@ function User(connection) {
     
     // initialize the users screen
     this.ansi().clear().bold().blink().text("Hello, World!").reset().flush();
+
+    this.send(new Buffer([0xFF, 0xFB, 0x01, 0xFF, 0xFE, 0x01]));
 }
 
 // generic abstractions; mostly syntactic sugar anyway
