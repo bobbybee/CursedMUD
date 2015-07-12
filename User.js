@@ -8,6 +8,7 @@ var ansi = require("./ansi");
 var telnet = require("./telnet");
 var GUI = require("./GUI");
 var keys = require("./keys");
+var SceneManager = require("./SceneManager");
 
 function User(connection) {
     this.connection = connection;
@@ -45,38 +46,44 @@ User.prototype.beginGame = function() {
     this.paused = false;
 
     this.gui = new GUI(this);
+    this.sceneManager = new SceneManager(this, this.gui);
     
-    this.gui.addNode({
-        type: "text",
-        content: "Welcome to CursedMUD",
-        bold: true,
-        position: [ansi.center, ansi.top]
-    });
+    var that = this;
 
-    this.gui.addNode({
-        type: "text",
-        content: "Main Menu",
-        position: [ansi.right, ansi.bottom]
-    });
-
-    this.focusedElement = this.gui.addNode({
-        type: "menu",
-        options: ["Login", "Register", "About"],
-        position: [ansi.center, 0.2],
-        interval: 0.2,
-        callback: function(option) {
-            this.gui.clear();
-            this.gui.addNode({
+    this.sceneManager.addScene("Main Menu", [
+            {
                 type: "text",
-                content: "Selected: " + option,
+                content: "Welcome to CursedMUD",
                 bold: true,
-                position: [ansi.center, ansi.center]
-            });
-            this.gui.render();
-        }
-    });
+                position: [ansi.center, ansi.top]
+            },
+            {
+                type: "text",
+                content: "Main Menu",
+                position: [ansi.right, ansi.bottom]
+            },
+            {
+                type: "menu",
+                options: ["Login", "Register", "About"],
+                position: [ansi.center, 0.2],
+                interval: 0.2,
+                callback: function(option) {
+                    that.sceneManager.switch("About");
+                },
+                focused: true
+            }
+    ]);
 
-    this.render();
+    this.sceneManager.addScene("About", [
+            {
+                type: "text",
+                content: "About",
+                bold: true,
+                position: [ansi.center, ansi.top]
+            }
+    ]);
+    
+    this.sceneManager.render("Main Menu");
 }
 
 // TODO: possible performance bottleneck?

@@ -42,6 +42,10 @@ GUI.prototype.addNode = function(descriptor) {
     }
 
     this.nodes.push(node);
+
+    if(descriptor.focused)
+        this.conn.focusedElement = node;
+
     return node;
 }
 
