@@ -6,6 +6,7 @@
 
 var ansi = require("./ansi");
 var telnet = require("./telnet");
+var GUI = require("./GUI");
 
 function User(connection) {
     this.connection = connection;
@@ -40,27 +41,19 @@ User.prototype.beginGame = function() {
     this.gameStarted = true;
     this.paused = false;
 
-    this.sceneView = [];
-    var that = this;
-
-    this.sceneView.push(function() {
-        that.ansi()
-            .clear()
-            .flush();
+    this.gui = new GUI(this);
+    
+    this.gui.addNode({
+        type: "text",
+        content: "Welcome to CursedMUD",
+        bold: true,
+        position: [ansi.center, ansi.top]
     });
 
-    this.sceneView.push(function() {
-        that.ansi()
-            .bold()
-            .positionText(ansi.center, ansi.top, "Welcome to CursedMUD")
-            .reset()
-            .flush();
-    });
-
-    this.sceneView.push(function() {
-        that.ansi()
-            .positionText(ansi.right, ansi.bottom, "Main Menu")
-            .flush();
+    this.gui.addNode({
+        type: "text",
+        content: "Main Menu",
+        position: [ansi.right, ansi.bottom]
     });
 
     this.render();
@@ -70,7 +63,7 @@ User.prototype.beginGame = function() {
 // notably, we shouldn't be flushing more than once
 
 User.prototype.render = function() {
-    this.sceneView.forEach(function(f) { f() });
+    this.gui.render();
 }
 
 // generic abstractions; mostly syntactic sugar anyway
