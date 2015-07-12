@@ -106,6 +106,10 @@ User.prototype.handleData = function(data) {
             this.handleKey(keys.ENTER);
             return;
         }
+    } else if(d.length == 1) {
+        if(d[0] == 0x03) {
+            this.quit();
+        }
     }
 
     // anything else is handled as is
@@ -139,6 +143,24 @@ User.prototype.windowSizeChange = function(width, height) {
     
     if(!this.gameStarted) this.beginGame();
     else                  this.render();
+}
+
+User.prototype.pause = function(newScene) {
+   this.oldScene = this.gui.currentScene;
+   this.sceneManager.switch(this.gui, newScene);
+}
+
+User.prototype.unpause = function() {
+    this.sceneManager.switch(this.gui, this.oldScene);
+}
+
+User.prototype.quit = function() {
+    this.pause("Quit");
+}
+
+User.prototype.close = function() {
+    this.gui.clear();
+    this.connection.end();
 }
 
 module.exports.User = User;

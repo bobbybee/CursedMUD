@@ -40,4 +40,27 @@ module.exports = function(sceneManager) {
                 focused: true
             }
     ]);
+
+    sceneManager.addScene("Quit", [
+            {
+                type: "text",
+                content: "Are you sure you want to quit?",
+                bold: true,
+                position: [ansi.center, ansi.top]
+            },
+            {
+                type: "menu",
+                options: ["Yes", "No"],
+                position: [ansi.center, 0.2],
+                interval: 0.2,
+                callback: function(option) {
+                    if(option == "Yes") {
+                        this.connection.close();
+                    } else {
+                        this.connection.unpause();
+                    }
+                },
+                focused: true
+            }
+    ]);
 }; 

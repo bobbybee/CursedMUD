@@ -17,7 +17,14 @@ SceneManager.prototype.addScene = function(name, description) {
 SceneManager.prototype.render = function(gui, id) {
     if(id) this.sceneID = id;
 
+    gui.currentScene = this.sceneID;
+
     var scene = this.scenes[this.sceneID];
+
+    if(!scene) {
+        console.warn("Unknown scene ID " + this.sceneID);
+        return;
+    }
 
     var that = this;
     scene.forEach(function(node) {
