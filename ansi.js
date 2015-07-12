@@ -50,8 +50,39 @@ ANSIEmitter.prototype.blink = function() {
     return this;
 }
 
+// position
+
+function numberToArr(n) {
+    return n.toString().split("").map(function(a) {
+        return a.charCodeAt(0);
+    });
+}
+
+ANSIEmitter.prototype.position = function(x, y) {
+    var finalX = 0;
+    var finalY = 0;
+
+    if(x == module.exports.center) {
+        finalX = 0.5 * this.connection.width; // TODO: proper centering + alignment
+        finalY = y * this.connection.height;
+    } else {
+        finalX = x * this.connection.width;
+        finalY = y * this.connection.height;
+    }
+    
+    this.queue([27, 91]
+            .concat(numberToArr(Math.floor(finalY)))
+            .concat([59])
+            .concat(numberToArr(Math.floor(finalX)))
+            .concat([72]));
+
+    return this;
+}
+
 // setup beautiful chaining interface
 
 module.exports = function(conn) {
     return new ANSIEmitter(conn);
 }
+
+module.exports.center = -2;

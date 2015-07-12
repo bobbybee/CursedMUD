@@ -41,6 +41,7 @@ User.prototype.beginGame = function() {
     this.ansi()
         .clear()
         .bold()
+        .position(ansi.center, 0)
         .text("Welcome to CursedMUD")
         .reset()
         .flush();
@@ -77,6 +78,7 @@ User.prototype.windowSizeChange = function(width, height) {
     if(this.width < 40 || this.height < 20) {
         this.ansi()
             .clear()
+            .position(0, 0)
             .text("Your screen's too small! Please resize your window")
             .flush();
  
