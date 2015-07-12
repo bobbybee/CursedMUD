@@ -46,7 +46,7 @@ User.prototype.beginGame = function() {
     this.paused = false;
 
     this.gui = new GUI(this);
-    this.sceneManager = new SceneManager(this, this.gui);
+    this.sceneManager = new SceneManager();
     
     var that = this;
 
@@ -68,7 +68,7 @@ User.prototype.beginGame = function() {
                 position: [ansi.center, 0.2],
                 interval: 0.2,
                 callback: function(option) {
-                    that.sceneManager.switch("About");
+                    that.sceneManager.switch(that.gui, "About");
                 },
                 focused: true
             }
@@ -84,13 +84,13 @@ User.prototype.beginGame = function() {
             {
                 type: "empty",
                 handleKey: function() {
-                    that.sceneManager.switch("Main Menu");
+                    that.sceneManager.switch(that.gui, "Main Menu");
                 },
                 focused: true
             }
     ]);
     
-    this.sceneManager.render("Main Menu");
+    this.sceneManager.render(this.gui, "Main Menu");
 }
 
 // TODO: possible performance bottleneck?
