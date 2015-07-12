@@ -6,10 +6,6 @@
  * it is similar to ncurses
  */
 
-var NodeFactory = {
-    "text": TextNode
-};
-
 function GUI(conn) {
     this.conn = conn;
     this.nodes = [];
@@ -25,6 +21,15 @@ GUI.prototype.addNode = function(descriptor) {
                     descriptor.position || [0,0], 
                     descriptor.bold || false, 
                     descriptor.blinking || false);
+            break;
+        }
+        case "menu": {
+            node = new MenuNode(
+                    this,
+                    descriptor.options || [],
+                    descriptor.defaultOption || 0,
+                    descriptor.position || [0,0],
+                    descriptor.interval || 0.1);
             break;
         }
         default: {
@@ -131,6 +136,44 @@ TextNode.prototype.move = function(x, y, ansi, connection) {
     this.position = [x, y]; // future writes go to the new location
     this.render(ansi, connection); // a full rendering is needed :(
     ansi.flush();
+}
+
+/*
+ * MenuNode
+ * implements a menu that lets the user select one option
+ * it's internally implemented with textnodes
+ */
+
+function MenuNode(gui, options, defaultOption, position, interval) {
+    this.gui = gui;
+    
+    // spawn TextNode's for each option
+    
+    this.nodes = [];
+    var that = this;
+
+    options.forEach(function(text, i) {
+        that.nodes.push(that.gui.addNode({
+            type: "text",
+            content: ((defaultOption == i) ? "* " : "  ") + text,
+            position: [position[0], position[1] + (interval * i)]
+        }));
+    });
+
+    this.options = options;
+    this.selectedOption = defaultOption;
+}
+
+MenuNode.prototype.change = function(options, ansi, connection) {
+    /* stub */
+}
+
+MenuNode.prototype.move = function(x, y, ansi, connection) {
+    /* stub */
+}
+
+MenuNode.prototype.render = function() {
+    /* stub */
 }
 
 module.exports = GUI;

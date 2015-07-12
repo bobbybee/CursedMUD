@@ -71,6 +71,13 @@ User.prototype.beginGame = function() {
         that.gui.move(counterNode, counterNode.position[0], 0.1+(Math.abs(Math.sin(i))*0.9));
     }, 500);
 
+    this.gui.addNode({
+        type: "menu",
+        options: ["Login", "Register", "About"],
+        position: [ansi.center, 0.2],
+        interval: 0.2
+    });
+
     this.render();
 }
 
