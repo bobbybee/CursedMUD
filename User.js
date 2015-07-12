@@ -7,8 +7,7 @@
 var ansi = require("./ansi");
 var telnet = require("./telnet");
 var GUI = require("./GUI");
-
-var ARROW_RIGHT = -1, ARROW_UP = -2, ARROW_DOWN = -3, ARROW_LEFT = -4;
+var keys = require("./keys");
 
 function User(connection) {
     this.connection = connection;
@@ -38,6 +37,7 @@ function User(connection) {
     telnet.characterMode(this);
 
     this.paused = true;
+    this.focusedElement = null;
 }
 
 User.prototype.beginGame = function() {
@@ -59,7 +59,7 @@ User.prototype.beginGame = function() {
         position: [ansi.right, ansi.bottom]
     });
 
-    var counterNode = this.gui.addNode({
+/*    var counterNode = this.gui.addNode({
         type: "text",
         content: "0",
         position: [ansi.center, 0.5]
@@ -72,9 +72,9 @@ User.prototype.beginGame = function() {
         ++i;
         that.gui.change(counterNode, i);
         that.gui.move(counterNode, counterNode.position[0], 0.1+(Math.abs(Math.sin(i))*0.9));
-    }, 500);
+    }, 500); */
 
-    this.gui.addNode({
+    this.focusedElement = this.gui.addNode({
         type: "menu",
         options: ["Login", "Register", "About"],
         position: [ansi.center, 0.2],
@@ -118,20 +118,24 @@ User.prototype.handleData = function(data) {
         // arrows, maybe?
         if(d[0] == 27 && d[1] == 91) {
             if(d[2] == 66) {
-                this.handleKey(ARROW_DOWN);
+                this.handleKey(keys.ARROW_DOWN);
             } else if(d[2] == 65) {
-                this.handleKey(ARROW_UP);
+                this.handleKey(keys.ARROW_UP);
             } else if(d[2] == 68) {
-                this.handleKey(ARROW_LEFT);
+                this.handleKey(keys.ARROW_LEFT);
             } else if(d[2] == 67) {
-                this.handleKey(ARROW_RIGHT);
+                this.handleKey(keys.ARROW_RIGHT);
             }
         }
     }
 }
 
 User.prototype.handleKey = function(key) {
-    console.log(key);
+    if(this.focusedElement) {
+        if(this.focusedElement.handleKey) {
+            this.focusedElement.handleKey(key);
+        }
+    }
 }
 
 User.prototype.windowSizeChange = function(width, height) {

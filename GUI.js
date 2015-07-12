@@ -6,6 +6,8 @@
  * it is similar to ncurses
  */
 
+var keys = require("./keys");
+
 function GUI(conn) {
     this.conn = conn;
     this.nodes = [];
@@ -174,6 +176,22 @@ MenuNode.prototype.move = function(x, y, ansi, connection) {
 
 MenuNode.prototype.render = function() {
     /* stub */
+}
+
+MenuNode.prototype.handleKey = function(key) {
+    if(key == keys.ARROW_DOWN) {
+        this.changeOption(1);
+    } else if(key == keys.ARROW_UP) {
+        this.changeOption(-1);
+    }
+}
+
+MenuNode.prototype.changeOption = function(amount) {
+    if(this.selectedOption + amount >= this.options.length || this.selectedOption + amount < 0) return;
+
+    this.gui.change(this.nodes[this.selectedOption], "  " + this.nodes[this.selectedOption].content.slice(2));
+    this.selectedOption += amount;
+    this.gui.change(this.nodes[this.selectedOption], "* " + this.nodes[this.selectedOption].content.slice(2));
 }
 
 module.exports = GUI;
