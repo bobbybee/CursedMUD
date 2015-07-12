@@ -59,21 +59,6 @@ User.prototype.beginGame = function() {
         position: [ansi.right, ansi.bottom]
     });
 
-/*    var counterNode = this.gui.addNode({
-        type: "text",
-        content: "0",
-        position: [ansi.center, 0.5]
-    });
-
-    var i = 0;
-    var that = this;
-
-    setInterval(function() {
-        ++i;
-        that.gui.change(counterNode, i);
-        that.gui.move(counterNode, counterNode.position[0], 0.1+(Math.abs(Math.sin(i))*0.9));
-    }, 500); */
-
     this.focusedElement = this.gui.addNode({
         type: "menu",
         options: ["Login", "Register", "About"],
