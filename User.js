@@ -16,7 +16,7 @@ function User(connection) {
     this.connection.on("data", this.handleData);
     
     // initialize the users screen
-    this.ansi().clear().flush();
+    this.ansi().clear().bold().blink().text("Hello, World!").reset().flush();
 }
 
 // generic abstractions; mostly syntactic sugar anyway
