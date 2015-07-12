@@ -33,6 +33,7 @@ function User(connection) {
 
     telnet.echo(this, false); // supress echo
     telnet.windowSize(this);
+    telnet.characterMode(this);
 
     this.paused = true;
 }

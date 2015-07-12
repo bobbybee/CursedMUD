@@ -27,6 +27,10 @@ module.exports.windowSize = function(conn) {
     conn.send(new Buffer([0xFF, 0xFD, 0x1F]));
 }
 
+module.exports.characterMode = function(conn) {
+    conn.send(new Buffer([0xFF, 0xFD, 0x22]));
+}
+
 // processes telnet input,
 // and calls back with the data array,
 // except with all telnet commands stripped
@@ -34,7 +38,8 @@ module.exports.windowSize = function(conn) {
 
 module.exports.input = function(user, data, callback) {
     // scan for the 0xFF
-    
+    console.log(data);
+
     var output = [];
     var i = 0;
 
@@ -63,6 +68,8 @@ module.exports.input = function(user, data, callback) {
                     var height = (data[++i] << 8) | (data[++i]);
 
                     user.windowSizeChange(width, height);
+                } else if(data[i] == 0x22) {
+                    // linemode negotiation
                 }
 
                 // at this point, we simply consume until we're done
