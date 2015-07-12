@@ -27,7 +27,7 @@ GUI.prototype.addNode = function(descriptor) {
         }
         case "menu": {
             node = new MenuNode(
-                    this,
+                    this.conn,
                     descriptor.options || [],
                     descriptor.defaultOption || 0,
                     descriptor.position || [0,0],
@@ -36,7 +36,7 @@ GUI.prototype.addNode = function(descriptor) {
             break;
         }
         case "empty": {
-            node = new EmptyNode();
+            node = new EmptyNode(this.conn);
 
             if(descriptor.handleKey) node.handleKey = descriptor.handleKey;
             if(descriptor.move) node.move= descriptor.move;
@@ -167,8 +167,9 @@ TextNode.prototype.move = function(x, y, ansi, connection) {
  * it's internally implemented with textnodes
  */
 
-function MenuNode(gui, options, defaultOption, position, interval, callback) {
-    this.gui = gui;
+function MenuNode(connection, options, defaultOption, position, interval, callback) {
+    this.gui = connection.gui;
+    this.connection = connection;
     
     // spawn TextNode's for each option
     
@@ -224,8 +225,9 @@ MenuNode.prototype.selectOption = function() {
         this.callback(this.options[this.selectedOption]);
 }
 
-function EmptyNode() {
-
+function EmptyNode(connection) {
+    this.connection = connection;
+    this.gui = this.connection.gui;
 }
 
 EmptyNode.prototype.change = function() { /* stub */ };

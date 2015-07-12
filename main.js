@@ -9,6 +9,12 @@
 
 var net = require("net");
 var User = require("./User");
+var SceneManager = require("./SceneManager");
+var World = require("./World");
+
+var sceneManager = new SceneManager();
+World(sceneManager); // define the world!
+User.sceneManager = sceneManager;
 
 var PORT = 7070;
 
