@@ -1,13 +1,11 @@
 var ansi = require("./ansi");
+var Components = require("./Components");
 
 module.exports = function(sceneManager) {
+    Components.sceneManager = sceneManager;
+
     sceneManager.addScene("Main Menu", [
-            {
-                type: "text",
-                content: "Welcome to CursedMUD",
-                bold: true,
-                position: [ansi.center, ansi.top]
-            },
+            Components.title("Welcome to CursedMUD"),
             {
                 type: "text",
                 content: "Main Menu",
@@ -19,35 +17,29 @@ module.exports = function(sceneManager) {
                 position: [ansi.center, 0.2],
                 interval: 0.2,
                 callback: function(option) {
-                    sceneManager.switch(this.gui, "About");
+                    sceneManager.switch(this.gui, option);
                 },
                 focused: true
             }
+    ]);
+
+    sceneManager.addScene("Login", [
+        Components.title("Login"),
+        Components.anyKey("Main Menu")
+    ]);
+
+    sceneManager.addScene("Register", [
+        Components.title("Register"),
+        Components.anyKey("Main Menu")
     ]);
 
     sceneManager.addScene("About", [
-            {
-                type: "text",
-                content: "About",
-                bold: true,
-                position: [ansi.center, ansi.top]
-            },
-            {
-                type: "empty",
-                handleKey: function(key) {
-                    sceneManager.switch(this.gui, "Main Menu");
-                },
-                focused: true
-            }
+            Components.title("About"),
+            Components.anyKey("Main Menu")
     ]);
 
     sceneManager.addScene("Quit", [
-            {
-                type: "text",
-                content: "Are you sure you want to quit?",
-                bold: true,
-                position: [ansi.center, ansi.top]
-            },
+            Components.title("Are you sure you want to quit?"),
             {
                 type: "menu",
                 options: ["Yes", "No"],
