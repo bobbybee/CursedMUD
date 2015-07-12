@@ -21,9 +21,24 @@ function User(connection) {
     });
     
     // initialize the users screen
-    this.ansi().clear().bold().blink().text("Hello, World!").reset().flush();
+    this.ansi()
+        .clear()
+        .bold()
+        .text("Fetching window size..")
+        .reset()
+        .flush();
+
     telnet.echo(this, false); // supress echo
     telnet.windowSize(this);
+}
+
+User.prototype.beginGame = function() {
+    this.ansi()
+        .clear()
+        .bold()
+        .text("Welcome to CursedMUD")
+        .reset()
+        .flush();
 }
 
 // generic abstractions; mostly syntactic sugar anyway
@@ -51,10 +66,17 @@ User.prototype.handleData = function(data) {
 }
 
 User.prototype.windowSizeChange = function(width, height) {
-    console.log("Size: "+width+"x"+height);
-
+    var flag = !this.width;
+    
     this.width = width;
     this.height = height;
+
+    // this event is needed to start the GUI
+    // so if this is the first one, we (try) to begin the game
+    // TODO: support the other events that need to happen,
+    // like ensuring that the terminal is in raw mode
+    
+    if(flag) this.beginGame();
 }
 
 module.exports.User = User;
