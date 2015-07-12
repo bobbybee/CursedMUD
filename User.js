@@ -56,6 +56,20 @@ User.prototype.beginGame = function() {
         position: [ansi.right, ansi.bottom]
     });
 
+    var counterNode = this.gui.addNode({
+        type: "text",
+        content: "0",
+        position: [ansi.center, ansi.center]
+    });
+
+    var i = 0;
+    var that = this;
+
+    setInterval(function() {
+        ++i;
+        that.gui.change(counterNode, i);
+    }, 500);
+
     this.render();
 }
 

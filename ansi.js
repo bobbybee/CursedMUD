@@ -58,7 +58,7 @@ function numberToArr(n) {
     });
 }
 
-ANSIEmitter.prototype.position = function(x, y, length) {
+ANSIEmitter.prototype.finalPositioning = function(x, y, length) {
     var finalX = 0;
     var finalY = 0;
 
@@ -79,13 +79,26 @@ ANSIEmitter.prototype.position = function(x, y, length) {
     } else {
         finalY = y * this.connection.height;
     }
+ 
+    return [Math.floor(finalX), Math.floor(finalY)];
+}
+
+ANSIEmitter.prototype.position = function(x, y, length) {
+    var position = this.finalPositioning(x, y, length);
+    
     this.queue([27, 91]
-            .concat(numberToArr(Math.floor(finalY)))
+            .concat(numberToArr(position[1]))
             .concat([59])
-            .concat(numberToArr(Math.floor(finalX)))
+            .concat(numberToArr(position[0]))
             .concat([72]));
 
     return this;
+}
+
+ANSIEmitter.prototype.stringBounds = function(x, y, length) {
+    var position = this.finalPositioning(x, y, length);
+
+    return [position[1], [position[0], position[0] + length]];
 }
 
 ANSIEmitter.prototype.positionText = function(x, y, text) {
