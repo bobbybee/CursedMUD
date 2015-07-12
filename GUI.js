@@ -51,6 +51,10 @@ GUI.prototype.change = function(node, content) {
     node.change(content, this.conn.ansi(), this.conn);
 }
 
+GUI.prototype.move = function(node, x, y) {
+    node.move(x, y, this.conn.ansi(), this.conn);
+}
+
 /* node definitions */
 
 function TextNode(content, position, bold, blinking) {
@@ -115,6 +119,17 @@ TextNode.prototype.change = function(content, ansi, connection) {
     this.setAttributes(ansi, connection);
     this.content = content.toString();
     this.rewrite(ansi, connection);
+    ansi.flush();
+}
+
+/*
+ * moves the node to somewhere else
+ */
+
+TextNode.prototype.move = function(x, y, ansi, connection) {
+    this.clear(ansi, connection); // prevent artifacts
+    this.position = [x, y]; // future writes go to the new location
+    this.render(ansi, connection); // a full rendering is needed :(
     ansi.flush();
 }
 
