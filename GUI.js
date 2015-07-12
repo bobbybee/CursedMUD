@@ -31,7 +31,8 @@ GUI.prototype.addNode = function(descriptor) {
                     descriptor.options || [],
                     descriptor.defaultOption || 0,
                     descriptor.position || [0,0],
-                    descriptor.interval || 0.1);
+                    descriptor.interval || 0.1,
+                    descriptor.callback || null);
             break;
         }
         default: {
@@ -60,6 +61,12 @@ GUI.prototype.change = function(node, content) {
 
 GUI.prototype.move = function(node, x, y) {
     node.move(x, y, this.conn.ansi(), this.conn);
+}
+
+GUI.prototype.clear = function() {
+    this.nodes = [];
+    this.conn.ansi().clear().flush();
+    this.conn.focusedElement = null;
 }
 
 /* node definitions */
@@ -146,7 +153,7 @@ TextNode.prototype.move = function(x, y, ansi, connection) {
  * it's internally implemented with textnodes
  */
 
-function MenuNode(gui, options, defaultOption, position, interval) {
+function MenuNode(gui, options, defaultOption, position, interval, callback) {
     this.gui = gui;
     
     // spawn TextNode's for each option
@@ -164,6 +171,8 @@ function MenuNode(gui, options, defaultOption, position, interval) {
 
     this.options = options;
     this.selectedOption = defaultOption;
+
+    this.callback = callback;
 }
 
 MenuNode.prototype.change = function(options, ansi, connection) {
@@ -183,15 +192,22 @@ MenuNode.prototype.handleKey = function(key) {
         this.changeOption(1);
     } else if(key == keys.ARROW_UP) {
         this.changeOption(-1);
+    } else if(key == keys.ENTER) {
+        this.selectOption();
     }
 }
 
 MenuNode.prototype.changeOption = function(amount) {
     if(this.selectedOption + amount >= this.options.length || this.selectedOption + amount < 0) return;
 
-    this.gui.change(this.nodes[this.selectedOption], "  " + this.nodes[this.selectedOption].content.slice(2));
+    this.gui.change(this.nodes[this.selectedOption], "  " + this.options[this.selectedOption]);
     this.selectedOption += amount;
-    this.gui.change(this.nodes[this.selectedOption], "* " + this.nodes[this.selectedOption].content.slice(2));
+    this.gui.change(this.nodes[this.selectedOption], "* " + this.options[this.selectedOption]);
+}
+
+MenuNode.prototype.selectOption = function() {
+    if(this.callback)
+        this.callback(this.options[this.selectedOption]);
 }
 
 module.exports = GUI;

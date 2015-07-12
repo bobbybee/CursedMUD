@@ -63,7 +63,17 @@ User.prototype.beginGame = function() {
         type: "menu",
         options: ["Login", "Register", "About"],
         position: [ansi.center, 0.2],
-        interval: 0.2
+        interval: 0.2,
+        callback: function(option) {
+            this.gui.clear();
+            this.gui.addNode({
+                type: "text",
+                content: "Selected: " + option,
+                bold: true,
+                position: [ansi.center, ansi.center]
+            });
+            this.gui.render();
+        }
     });
 
     this.render();
@@ -104,15 +114,29 @@ User.prototype.handleData = function(data) {
         if(d[0] == 27 && d[1] == 91) {
             if(d[2] == 66) {
                 this.handleKey(keys.ARROW_DOWN);
+                return;
             } else if(d[2] == 65) {
                 this.handleKey(keys.ARROW_UP);
+                return;
             } else if(d[2] == 68) {
                 this.handleKey(keys.ARROW_LEFT);
+                return;
             } else if(d[2] == 67) {
                 this.handleKey(keys.ARROW_RIGHT);
+                return;
             }
         }
+    } else if(d.length == 2) {
+        if(d[0] == 0x0D && d[1] == 0x00) {
+            this.handleKey(keys.ENTER);
+            return;
+        }
     }
+
+    // anything else is handled as is
+    
+    var that = this;
+    d.forEach(function(k) { that.handleKey(k) });
 }
 
 User.prototype.handleKey = function(key) {
