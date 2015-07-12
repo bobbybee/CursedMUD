@@ -38,12 +38,25 @@ User.prototype.beginGame = function() {
     this.gameStarted = true;
     this.paused = false;
 
-    this.ansi()
-        .clear()
-        .bold()
-        .positionText(ansi.center, 0, "Welcome to CursedMUD")
-        .reset()
-        .flush();
+    this.sceneView = [];
+    var that = this;
+
+    this.sceneView.push(function() {
+        that.ansi()
+            .clear()
+            .bold()
+            .positionText(ansi.center, 0, "Welcome to CursedMUD")
+            .reset()
+            .flush();
+    });
+
+    this.render();
+}
+
+// TODO: possible performance bottleneck?
+
+User.prototype.render = function() {
+    this.sceneView.forEach(function(f) { f() });
 }
 
 // generic abstractions; mostly syntactic sugar anyway
@@ -91,6 +104,7 @@ User.prototype.windowSizeChange = function(width, height) {
     // like ensuring that the terminal is in raw mode
     
     if(!this.gameStarted) this.beginGame();
+    else                  this.render();
 }
 
 module.exports.User = User;
