@@ -30,9 +30,14 @@ function User(connection) {
 
     telnet.echo(this, false); // supress echo
     telnet.windowSize(this);
+
+    this.paused = true;
 }
 
 User.prototype.beginGame = function() {
+    this.gameStarted = true;
+    this.paused = false;
+
     this.ansi()
         .clear()
         .bold()
@@ -66,17 +71,25 @@ User.prototype.handleData = function(data) {
 }
 
 User.prototype.windowSizeChange = function(width, height) {
-    var flag = !this.width;
-    
     this.width = width;
     this.height = height;
-
+    
+    if(this.width < 40 || this.height < 20) {
+        this.ansi()
+            .clear()
+            .text("Your screen's too small! Please resize your window")
+            .flush();
+ 
+        this.paused = true;       
+        return;
+    }
+        
     // this event is needed to start the GUI
     // so if this is the first one, we (try) to begin the game
     // TODO: support the other events that need to happen,
     // like ensuring that the terminal is in raw mode
     
-    if(flag) this.beginGame();
+    if(!this.gameStarted) this.beginGame();
 }
 
 module.exports.User = User;
