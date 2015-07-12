@@ -58,12 +58,14 @@ function numberToArr(n) {
     });
 }
 
-ANSIEmitter.prototype.position = function(x, y) {
+ANSIEmitter.prototype.position = function(x, y, length) {
     var finalX = 0;
     var finalY = 0;
 
     if(x == module.exports.center) {
-        finalX = 0.5 * this.connection.width; // TODO: proper centering + alignment
+        length = length || 0;
+
+        finalX = 0.5 * (this.connection.width - length);
         finalY = y * this.connection.height;
     } else {
         finalX = x * this.connection.width;
@@ -75,6 +77,13 @@ ANSIEmitter.prototype.position = function(x, y) {
             .concat([59])
             .concat(numberToArr(Math.floor(finalX)))
             .concat([72]));
+
+    return this;
+}
+
+ANSIEmitter.prototype.positionText = function(x, y, text) {
+    this.position(x, y, text.length)
+        .text(text);
 
     return this;
 }

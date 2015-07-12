@@ -41,8 +41,7 @@ User.prototype.beginGame = function() {
     this.ansi()
         .clear()
         .bold()
-        .position(ansi.center, 0)
-        .text("Welcome to CursedMUD")
+        .positionText(ansi.center, 0, "Welcome to CursedMUD")
         .reset()
         .flush();
 }
