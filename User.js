@@ -50,8 +50,10 @@ User.prototype.beginGame = function() {
     this.sceneManager.render(this.gui, "Main Menu");
 }
 
-// TODO: possible performance bottleneck?
-// notably, we shouldn't be flushing more than once
+// this renders *the entire scene from scratch*
+// meaning, it's slooow and potentially high bandwidth
+// it should only be done when it has to be:
+// that is, when a new scene loads or the window is resized at the moment
 
 User.prototype.render = function() {
     this.gui.render();
@@ -80,6 +82,8 @@ User.prototype.handleData = function(data) {
 
     var d = telnet.input(this, data);
 
+    // now scan for special commands
+    
     if(d.length == 3) {
         // arrows, maybe?
         if(d[0] == 27 && d[1] == 91) {
@@ -111,11 +115,8 @@ User.prototype.handleData = function(data) {
 }
 
 User.prototype.handleKey = function(key) {
-    if(this.focusedElement) {
-        if(this.focusedElement.handleKey) {
-            this.focusedElement.handleKey(key);
-        }
-    }
+    if(this.focusedElement && this.focusedElement.handleKey)
+        this.focusedElement.handleKey(key);
 }
 
 User.prototype.windowSizeChange = function(width, height) {
@@ -135,8 +136,6 @@ User.prototype.windowSizeChange = function(width, height) {
         
     // this event is needed to start the GUI
     // so if this is the first one, we (try) to begin the game
-    // TODO: support the other events that need to happen,
-    // like ensuring that the terminal is in raw mode
     
     if(!this.gameStarted) this.beginGame();
     else                  this.render();
