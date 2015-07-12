@@ -8,6 +8,8 @@ var ansi = require("./ansi");
 var telnet = require("./telnet");
 var GUI = require("./GUI");
 
+var ARROW_RIGHT = -1, ARROW_UP = -2, ARROW_DOWN = -3, ARROW_LEFT = -4;
+
 function User(connection) {
     this.connection = connection;
     
@@ -110,7 +112,26 @@ User.prototype.handleData = function(data) {
     // telnet commands have to be thoroughly parsed for detection, however,
     // so we run the buffer through the telnet interface first
 
-    console.log(telnet.input(this, data));
+    var d = telnet.input(this, data);
+
+    if(d.length == 3) {
+        // arrows, maybe?
+        if(d[0] == 27 && d[1] == 91) {
+            if(d[2] == 66) {
+                this.handleKey(ARROW_DOWN);
+            } else if(d[2] == 65) {
+                this.handleKey(ARROW_UP);
+            } else if(d[2] == 68) {
+                this.handleKey(ARROW_LEFT);
+            } else if(d[2] == 67) {
+                this.handleKey(ARROW_RIGHT);
+            }
+        }
+    }
+}
+
+User.prototype.handleKey = function(key) {
+    console.log(key);
 }
 
 User.prototype.windowSizeChange = function(width, height) {
