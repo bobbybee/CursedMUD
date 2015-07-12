@@ -80,6 +80,13 @@ User.prototype.beginGame = function() {
                 content: "About",
                 bold: true,
                 position: [ansi.center, ansi.top]
+            },
+            {
+                type: "empty",
+                handleKey: function() {
+                    that.sceneManager.switch("Main Menu");
+                },
+                focused: true
             }
     ]);
     

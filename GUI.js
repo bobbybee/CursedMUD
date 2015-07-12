@@ -37,6 +37,12 @@ GUI.prototype.addNode = function(descriptor) {
         }
         case "empty": {
             node = new EmptyNode();
+
+            if(descriptor.handleKey) node.handleKey = descriptor.handleKey;
+            if(descriptor.move) node.move= descriptor.move;
+            if(descriptor.change) node.change = descriptor.change;
+            if(descriptor.render) node.render = descriptor.render;
+
             break;
         }
         default: {
