@@ -19,6 +19,7 @@ function User(connection) {
     // initialize the users screen
     this.ansi().clear().bold().blink().text("Hello, World!").reset().flush();
     telnet.echo(this, false); // supress echo
+    telnet.windowSize(this);
 }
 
 // generic abstractions; mostly syntactic sugar anyway
@@ -34,7 +35,17 @@ User.prototype.ansi = function() {
 // socket event handlers
 
 User.prototype.handleData = function(data) {
-    console.log(data); // for debug
+    // the incoming data roughly falls into one of three categories:
+    // 1) telnet commands, like window size updates
+    // 2) TTY commands, like arrow keys
+    // 3) plain text, pretty much everything else
+    
+    // telnet commands have to be thoroughly parsed for detection, however,
+    // so we run the buffer through the telnet interface first
+
+    telnet.input(data, function(d) {
+        console.log(d);
+    });
 }
 
 module.exports.User = User;
