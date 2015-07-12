@@ -32,7 +32,7 @@ module.exports.windowSize = function(conn) {
 // except with all telnet commands stripped
 // TODO: parse for *all* telnet commands
 
-module.exports.input = function(data, callback) {
+module.exports.input = function(user, data, callback) {
     // scan for the 0xFF
     
     var output = [];
@@ -62,7 +62,7 @@ module.exports.input = function(data, callback) {
                     var width = (data[++i] << 8) | (data[++i]);
                     var height = (data[++i] << 8) | (data[++i]);
 
-                    console.log(width+"x"+height);
+                    user.windowSizeChange(width, height);
                 }
 
                 // at this point, we simply consume until we're done

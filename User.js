@@ -14,7 +14,11 @@ function User(connection) {
     console.log("Incoming connection");
 
     // handle socket events
-    this.connection.on("data", this.handleData);
+    var that = this;
+    
+    this.connection.on("data", function(data) {
+        that.handleData(data);
+    });
     
     // initialize the users screen
     this.ansi().clear().bold().blink().text("Hello, World!").reset().flush();
@@ -43,9 +47,14 @@ User.prototype.handleData = function(data) {
     // telnet commands have to be thoroughly parsed for detection, however,
     // so we run the buffer through the telnet interface first
 
-    telnet.input(data, function(d) {
-        console.log(d);
-    });
+    console.log(telnet.input(this, data));
+}
+
+User.prototype.windowSizeChange = function(width, height) {
+    console.log("Size: "+width+"x"+height);
+
+    this.width = width;
+    this.height = height;
 }
 
 module.exports.User = User;
