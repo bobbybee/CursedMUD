@@ -62,16 +62,23 @@ ANSIEmitter.prototype.position = function(x, y, length) {
     var finalX = 0;
     var finalY = 0;
 
+    length = length || 0;
+    
     if(x == module.exports.center) {
-        length = length || 0;
-
         finalX = 0.5 * (this.connection.width - length);
-        finalY = y * this.connection.height;
+    } else if(x == module.exports.right) {
+        finalX = this.connection.width - length;
     } else {
         finalX = x * this.connection.width;
-        finalY = y * this.connection.height;
     }
     
+    if(y == module.exports.bottom) {
+        finalY = this.connection.height;
+    } else if(y == module.exports.center) {
+        finalY = 0.5 * this.connection.height;
+    } else {
+        finalY = y * this.connection.height;
+    }
     this.queue([27, 91]
             .concat(numberToArr(Math.floor(finalY)))
             .concat([59])
@@ -94,4 +101,8 @@ module.exports = function(conn) {
     return new ANSIEmitter(conn);
 }
 
+module.exports.left = 0;
 module.exports.center = -2;
+module.exports.right = -3;
+module.exports.bottom = -1;
+module.exports.top = 0;

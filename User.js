@@ -24,8 +24,10 @@ function User(connection) {
     this.ansi()
         .clear()
         .bold()
-        .text("Fetching window size..")
+        .text("Fetching window size..\n")
         .reset()
+        .text("If this message persists and/or you see garbage characters,\n")
+        .text("You need to use a telnet-compatible client as opposed to raw TCP.\n")
         .flush();
 
     telnet.echo(this, false); // supress echo
@@ -44,9 +46,20 @@ User.prototype.beginGame = function() {
     this.sceneView.push(function() {
         that.ansi()
             .clear()
+            .flush();
+    });
+
+    this.sceneView.push(function() {
+        that.ansi()
             .bold()
-            .positionText(ansi.center, 0, "Welcome to CursedMUD")
+            .positionText(ansi.center, ansi.top, "Welcome to CursedMUD")
             .reset()
+            .flush();
+    });
+
+    this.sceneView.push(function() {
+        that.ansi()
+            .positionText(ansi.right, ansi.bottom, "Main Menu")
             .flush();
     });
 
@@ -54,6 +67,7 @@ User.prototype.beginGame = function() {
 }
 
 // TODO: possible performance bottleneck?
+// notably, we shouldn't be flushing more than once
 
 User.prototype.render = function() {
     this.sceneView.forEach(function(f) { f() });
@@ -90,7 +104,7 @@ User.prototype.windowSizeChange = function(width, height) {
     if(this.width < 40 || this.height < 20) {
         this.ansi()
             .clear()
-            .position(0, 0)
+            .position(ansi.top, ansi.left)
             .text("Your screen's too small! Please resize your window")
             .flush();
  
