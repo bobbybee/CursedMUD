@@ -38,6 +38,8 @@ ANSIEmitter.prototype.reset = function() {
     return this;
 }
 
+// styles
+
 ANSIEmitter.prototype.bold = function() {
     this.queue([27, 91, 49, 109]);
     return this;
@@ -47,6 +49,8 @@ ANSIEmitter.prototype.blink = function() {
     this.queue([27, 91, 53, 109]);
     return this;
 }
+
+// setup beautiful chaining interface
 
 module.exports = function(conn) {
     return new ANSIEmitter(conn);
