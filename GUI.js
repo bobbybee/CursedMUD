@@ -35,6 +35,10 @@ GUI.prototype.addNode = function(descriptor) {
                     descriptor.callback || null);
             break;
         }
+        case "empty": {
+            node = new EmptyNode();
+            break;
+        }
         default: {
             console.error("Unknown node type found: "+descriptor.type);
             return;
@@ -213,5 +217,14 @@ MenuNode.prototype.selectOption = function() {
     if(this.callback)
         this.callback(this.options[this.selectedOption]);
 }
+
+function EmptyNode() {
+
+}
+
+EmptyNode.prototype.change = function() { /* stub */ };
+EmptyNode.prototype.move = function() { /* stub */ };
+EmptyNode.prototype.render = function() { /* stub */ };
+EmptyNode.prototype.handleKey = function() { /* stub */ };
 
 module.exports = GUI;
