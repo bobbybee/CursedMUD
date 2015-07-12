@@ -5,6 +5,7 @@
  */
 
 var ansi = require("./ansi");
+var telnet = require("./telnet");
 
 function User(connection) {
     this.connection = connection;
@@ -17,8 +18,7 @@ function User(connection) {
     
     // initialize the users screen
     this.ansi().clear().bold().blink().text("Hello, World!").reset().flush();
-
-    this.send(new Buffer([0xFF, 0xFB, 0x01, 0xFF, 0xFE, 0x01]));
+    telnet.echo(this, false); // supress echo
 }
 
 // generic abstractions; mostly syntactic sugar anyway
