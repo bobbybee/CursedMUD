@@ -28,7 +28,7 @@ module.exports = function(sceneManager) {
         {
             type: "input",
             position: [0.4, 0.3],
-            length: 16,
+            length: 0.5,
             focused: true
         }
     ]);

@@ -47,6 +47,7 @@ GUI.prototype.addNode = function(descriptor) {
         }
         case "input": {
             node = new InputNode(
+                    this.conn,
                     descriptor.defaultValue || "",
                     descriptor.position || [0,0],
                     descriptor.length || 8);
@@ -245,9 +246,10 @@ EmptyNode.prototype.handleKey = function() { /* stub */ };
 // like the <input> tag in HTML,
 // implemented like elinks
 
-function InputNode(defaultText, position, length) {
+function InputNode(connection, defaultText, position, length) {
     this.contents = defaultText;
     this.length = length;
+    this.connection = connection;
 
     this.text = new TextNode(this.getVisible(), position, false, false);
 }
@@ -262,16 +264,18 @@ InputNode.prototype.change = function() { /* stub */ };
 // returns the visual portion of the text
 
 InputNode.prototype.getVisible = function() {
-    if(this.length < this.contents.length) {
+    var length = Math.floor(this.length * this.connection.width);
+    
+    if(length  < this.contents.length) {
         // too much text!
         // only display the end
         
         return this.contents.slice(-this.length);
-    } else if(this.length >= this.contents.length) {
+    } else if(length >= this.contents.length) {
         // too little text!
         // pad with underscores
         
-        return this.contents + Array(this.length - this.contents.length + 1).join("_");
+        return this.contents + Array(length - this.contents.length + 1).join("_");
     }
 }
 
