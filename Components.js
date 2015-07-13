@@ -22,3 +22,13 @@ module.exports.anyKey = function(exit) {
         focused: true
     };
 }
+
+// simple label, short-hand
+
+module.exports.label = function(text, position) {
+    return {
+        type: "text",
+        content: text,
+        position: position
+    };
+}
