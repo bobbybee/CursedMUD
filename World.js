@@ -25,7 +25,12 @@ module.exports = function(sceneManager) {
 
     sceneManager.addScene("Login", [
         Components.title("Login"),
-        Components.anyKey("Main Menu")
+        {
+            type: "input",
+            position: [0.4, 0.3],
+            length: 16,
+            focused: true
+        }
     ]);
 
     sceneManager.addScene("Register", [

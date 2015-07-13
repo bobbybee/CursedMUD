@@ -120,7 +120,7 @@ User.prototype.handleData = function(data) {
 
 User.prototype.handleKey = function(key) {
     if(this.focusedElement && this.focusedElement.handleKey)
-        this.focusedElement.handleKey(key);
+        this.focusedElement.handleKey(key, this.ansi(), this);
 }
 
 User.prototype.windowSizeChange = function(width, height) {

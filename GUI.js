@@ -45,6 +45,14 @@ GUI.prototype.addNode = function(descriptor) {
 
             break;
         }
+        case "input": {
+            node = new InputNode(
+                    descriptor.defaultValue || "",
+                    descriptor.position || [0,0],
+                    descriptor.length || 8);
+
+            break;
+        }
         default: {
             console.error("Unknown node type found: "+descriptor.type);
             return;
@@ -234,5 +242,46 @@ EmptyNode.prototype.change = function() { /* stub */ };
 EmptyNode.prototype.move = function() { /* stub */ };
 EmptyNode.prototype.render = function() { /* stub */ };
 EmptyNode.prototype.handleKey = function() { /* stub */ };
+
+// InputNode is somewhere the user can type
+// like the <input> tag in HTML,
+// implemented like elinks
+
+function InputNode(defaultText, position, length) {
+    this.contents = defaultText;
+    this.length = length;
+
+    this.text = new TextNode(this.getVisible(), position, false, false);
+}
+
+InputNode.prototype.render = function(ansi, connection) {
+    this.text.render(ansi, connection);
+}
+
+InputNode.prototype.move = function() { /* stub */ };
+InputNode.prototype.change = function() { /* stub */ };
+
+// returns the visual portion of the text
+
+InputNode.prototype.getVisible = function() {
+    if(this.length < this.contents.length) {
+        // too much text!
+        // only display the end
+        
+        return this.contents.slice(-this.length);
+    } else if(this.length >= this.contents.length) {
+        // too little text!
+        // pad with underscores
+        
+        return this.contents + Array(this.length - this.contents.length + 1).join("_");
+    }
+}
+
+InputNode.prototype.handleKey = function(key, ansi, connection) {
+    // TODO: handle backspace, enter, etc.
+    
+    this.contents += String.fromCharCode(key);
+    this.text.change(this.getVisible(), ansi, connection);
+}
 
 module.exports = GUI;
