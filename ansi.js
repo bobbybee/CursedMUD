@@ -50,6 +50,11 @@ ANSIEmitter.prototype.blink = function() {
     return this;
 }
 
+ANSIEmitter.prototype.underline = function() {
+    this.queue([27, 91, 52, 109]);
+    return this;
+}
+
 // position
 
 function numberToArr(n) {

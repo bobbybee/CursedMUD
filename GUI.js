@@ -8,6 +8,7 @@
 
 var keys = require("./keys");
 var Components = require("./Components");
+var ansi = require("./ansi");
 
 function GUI(conn) {
     this.conn = conn;
@@ -24,6 +25,7 @@ GUI.prototype.addNode = function(descriptor) {
                     descriptor.position || [0,0], 
                     descriptor.bold || false, 
                     descriptor.blinking || false,
+                    descriptor.underline || false,
                     descriptor.focusAction || null,
                     descriptor.connected || null);
             break;
@@ -107,11 +109,12 @@ GUI.prototype.clear = function() {
 
 /* node definitions */
 
-function TextNode(content, position, bold, blinking, focusAction, connected) {
+function TextNode(content, position, bold, blinking, underline, focusAction, connected) {
     this.content = content;
     this.position = position;
     this.bold = bold;
     this.blinking = blinking;
+    this.underline = underline;
     this.type = "text";
 
     this.focusAction = focusAction;
@@ -128,6 +131,7 @@ function TextNode(content, position, bold, blinking, focusAction, connected) {
 TextNode.prototype.setAttributes = function(ansi, connection) {
     if(this.bold) ansi.bold();
     if(this.blinking) ansi.blink();
+    if(this.underline) ansi.underline();
 }
 
 /*
@@ -194,7 +198,9 @@ TextNode.prototype.move = function(x, y, ansi, connection) {
 }
 
 TextNode.prototype.onFocus = function(state) {
-    console.log("Should I " + this.focusAction + "? " + state);
+    if(this.focusAction == ansi.underline) {
+        this.underline = state;
+    }
 }
 
 /*
@@ -278,7 +284,7 @@ function InputNode(connection, defaultText, position, length) {
     this.length = length;
     this.connection = connection;
 
-    this.text = new TextNode(this.getVisible(), position, false, false);
+    this.text = new TextNode(this.getVisible(), position, false, false, false);
 }
 
 InputNode.prototype.render = function(ansi, connection) {
