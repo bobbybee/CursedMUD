@@ -30,7 +30,7 @@ module.exports = function(sceneManager) {
             position: [0.4, 0.3],
             length: 0.5,
             focused: true,
-            label: ["Username:", [0.15, 0.3], ansi.underline]
+            label: ["Username:", [0.15, 0.3], ansi.blinking]
         },
         {
             type: "input",

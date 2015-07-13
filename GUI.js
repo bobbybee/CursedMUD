@@ -200,6 +200,10 @@ TextNode.prototype.move = function(x, y, ansi, connection) {
 TextNode.prototype.onFocus = function(state) {
     if(this.focusAction == ansi.underline) {
         this.underline = state;
+    } else if(this.focusAction == ansi.blinking) {
+        this.blinking = state;
+    } else if(this.focusAction == ansi.bold) {
+        this.bold = state;
     }
 }
 

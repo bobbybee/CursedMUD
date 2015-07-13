@@ -137,3 +137,5 @@ module.exports.top = 0;
 
 module.exports.none = 0;
 module.exports.underline = -1;
+module.exports.blinking = -2;
+module.exports.bold = -3;
