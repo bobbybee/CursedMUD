@@ -108,6 +108,16 @@ ANSIEmitter.prototype.positionText = function(x, y, text) {
     return this;
 }
 
+ANSIEmitter.prototype.cursor = function(enabled) {
+    if(enabled) {
+        this.queue([27, 91, 63, 50, 53, 104]);
+    } else {
+        this.queue([27, 91, 63, 50, 53, 108]);
+    }
+
+    return this;
+}
+
 // setup beautiful chaining interface
 
 module.exports = function(conn) {

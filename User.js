@@ -32,6 +32,7 @@ function User(connection, sceneManager) {
         .reset()
         .text("If this message persists and/or you see garbage characters,\n")
         .text("You need to use a telnet-compatible client as opposed to raw TCP.\n")
+        .cursor(false)
         .flush();
 
     telnet.echo(this, false); // supress echo
