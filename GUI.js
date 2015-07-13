@@ -279,8 +279,13 @@ InputNode.prototype.getVisible = function() {
 
 InputNode.prototype.handleKey = function(key, ansi, connection) {
     // TODO: handle backspace, enter, etc.
-    
-    this.contents += String.fromCharCode(key);
+   
+    if(key == 0x7F) {
+        this.contents = this.contents.slice(0, -1);
+    } else {
+        this.contents += String.fromCharCode(key);
+    }
+
     this.text.change(this.getVisible(), ansi, connection);
 }
 
