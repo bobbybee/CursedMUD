@@ -302,12 +302,12 @@ InputNode.prototype.change = function() { /* stub */ };
 
 InputNode.prototype.getVisible = function() {
     var length = Math.floor(this.length * this.connection.width);
-    
-    if(length  < this.contents.length) {
+   
+    if(length < this.contents.length) {
         // too much text!
         // only display the end
         
-        return this.contents.slice(-this.length);
+        return this.contents.slice(-length);
     } else if(length >= this.contents.length) {
         // too little text!
         // pad with underscores
