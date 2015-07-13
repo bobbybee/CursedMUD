@@ -129,3 +129,6 @@ module.exports.center = -2;
 module.exports.right = -3;
 module.exports.bottom = -1;
 module.exports.top = 0;
+
+module.exports.none = 0;
+module.exports.underline = -1;

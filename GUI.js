@@ -7,6 +7,7 @@
  */
 
 var keys = require("./keys");
+var Components = require("./Components");
 
 function GUI(conn) {
     this.conn = conn;
@@ -22,7 +23,9 @@ GUI.prototype.addNode = function(descriptor) {
                     descriptor.content || "",
                     descriptor.position || [0,0], 
                     descriptor.bold || false, 
-                    descriptor.blinking || false);
+                    descriptor.blinking || false,
+                    descriptor.focusAction || null,
+                    descriptor.connected || null);
             break;
         }
         case "menu": {
@@ -52,6 +55,10 @@ GUI.prototype.addNode = function(descriptor) {
                     descriptor.position || [0,0],
                     descriptor.length || 8);
 
+            if(descriptor.label) {
+                this.addNode(Components.label(descriptor.label[0], descriptor.label[1], descriptor.label[2], node));
+            }
+
             break;
         }
         default: {
@@ -62,8 +69,11 @@ GUI.prototype.addNode = function(descriptor) {
 
     this.nodes.push(node);
 
-    if(descriptor.focused)
+    if(descriptor.focused) {
         this.conn.focusedElement = node;
+        
+        if(node.onFocus) node.onFocus(true);
+    }
 
     return node;
 }
@@ -89,17 +99,30 @@ GUI.prototype.move = function(node, x, y) {
 GUI.prototype.clear = function() {
     this.nodes = [];
     this.conn.ansi().clear().flush();
+    
+    if(this.conn.focusedElement.onFocus)
+        this.conn.focusedElement.onFocus(false);
     this.conn.focusedElement = null;
 }
 
 /* node definitions */
 
-function TextNode(content, position, bold, blinking) {
+function TextNode(content, position, bold, blinking, focusAction, connected) {
     this.content = content;
     this.position = position;
     this.bold = bold;
     this.blinking = blinking;
     this.type = "text";
+
+    this.focusAction = focusAction;
+    this.connected = connected;
+
+    if(this.connected) {
+        var that = this;
+        this.connected.onFocus = function(state) {
+            that.onFocus(state);
+        };
+    }
 }
 
 TextNode.prototype.setAttributes = function(ansi, connection) {
@@ -168,6 +191,10 @@ TextNode.prototype.move = function(x, y, ansi, connection) {
     this.position = [x, y]; // future writes go to the new location
     this.render(ansi, connection); // a full rendering is needed :(
     ansi.flush();
+}
+
+TextNode.prototype.onFocus = function(state) {
+    console.log("Should I " + this.focusAction + "? " + state);
 }
 
 /*

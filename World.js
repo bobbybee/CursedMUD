@@ -25,18 +25,18 @@ module.exports = function(sceneManager) {
 
     sceneManager.addScene("Login", [
         Components.title("Login"),
-        Components.label("Username:", [0.15, 0.3]),
-        Components.label("Password: ", [0.15, 0.6]),
         {
             type: "input",
             position: [0.4, 0.3],
             length: 0.5,
-            focused: true
+            focused: true,
+            label: ["Username: ", [0.15, 0.3], ansi.underline]
         },
         {
             type: "input",
             position: [0.4, 0.6],
             length: 0.5,
+            label: ["Password: ", [0.15, 0.6], ansi.underline]
         }
     ]);
 

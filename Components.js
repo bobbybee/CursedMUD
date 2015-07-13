@@ -25,10 +25,12 @@ module.exports.anyKey = function(exit) {
 
 // simple label, short-hand
 
-module.exports.label = function(text, position) {
+module.exports.label = function(text, position, focusAction, connected) {
     return {
         type: "text",
         content: text,
-        position: position
+        position: position,
+        focusAction: focusAction,
+        connected: connected
     };
 }
