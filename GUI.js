@@ -221,10 +221,8 @@ MenuNode.prototype.handleKey = function(key) {
 }
 
 MenuNode.prototype.changeOption = function(amount) {
-    if(this.selectedOption + amount >= this.options.length || this.selectedOption + amount < 0) return;
-
     this.gui.change(this.nodes[this.selectedOption], "  " + this.options[this.selectedOption]);
-    this.selectedOption += amount;
+    this.selectedOption = (this.selectedOption + amount + (this.options.length * 2)) % this.options.length;    
     this.gui.change(this.nodes[this.selectedOption], "* " + this.options[this.selectedOption]);
 }
 
